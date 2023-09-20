@@ -4,6 +4,7 @@ import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader/Loader";
 import { Link } from "react-router-dom";
 import "./Profile.css";
+import profile from "../../images/Profile.png";
 
 const Profile = ({ history }) => {
   const { user, loading, isAuthenticated } = useSelector((state) => state.user);
@@ -24,7 +25,7 @@ const Profile = ({ history }) => {
             <div>
               <h1>My Profile</h1>
               <img
-                src={user.avatar?.url}
+                src={user.avatar ? user.avatar.url : profile}
                 alt={user.name}
                 style={{
                   borderRadius: "100%",

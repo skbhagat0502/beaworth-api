@@ -8,11 +8,9 @@ const cloudinary = require("cloudinary");
 
 // Register a User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  let avatarData = {
-    public_id: "Profile_ol7kjl",
-    url: "https://res.cloudinary.com/beaworth/image/upload/v1694977183/Profile_ol7kjl.png",
-  };
-  if (!req.body.avatar) {
+  let avatarData;
+  if (req.body.avatar) {
+    console.log(true);
     const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
       folder: "avatars",
       width: 150,
@@ -32,6 +30,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     password,
     avatar: avatarData,
   });
+  console.log(user);
   sendToken(user, 201, res);
 });
 
@@ -187,10 +186,9 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
-    avatar: req.body.avatar,
   };
   let user;
-  if (!req.body.avatar) {
+  if (req.body.avatar) {
     user = await User.findById(req.user.id);
 
     const imageId = user.avatar.public_id;
