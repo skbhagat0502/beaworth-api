@@ -8,6 +8,7 @@ const cloudinary = require("cloudinary");
 
 // Register User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
+  console.log(req.body);
   let avatarData;
   if (req.body.avatar) {
     console.log(true);
