@@ -6,7 +6,7 @@ const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const cloudinary = require("cloudinary");
 
-// Register a User
+// Register User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   let avatarData;
   if (req.body.avatar) {
@@ -22,6 +22,15 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     };
   }
   const { name, email, phone, password } = req.body;
+
+  // Check if email or phone is already registered
+  const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
+
+  if (existingUser) {
+    return next(
+      new ErrorHandler("Email or phone number is already registered", 400)
+    );
+  }
 
   const user = await User.create({
     name,
