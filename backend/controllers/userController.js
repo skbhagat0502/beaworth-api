@@ -8,10 +8,8 @@ const cloudinary = require("cloudinary");
 
 // Register User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  console.log(req.body);
   let avatarData;
   if (req.body.avatar) {
-    console.log(true);
     const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
       folder: "avatars",
       width: 150,
@@ -197,34 +195,42 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
     email: req.body.email,
     phone: req.body.phone,
   };
-  let user;
   if (req.body.avatar) {
-    user = await User.findById(req.user.id);
-
-    const imageId = user.avatar.public_id;
-
-    await cloudinary.v2.uploader.destroy(imageId);
-
+    const user = await User.findById(req.user.id);
+    if (user.avatar) {
+      await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+    }
+    // Upload the new avatar to Cloudinary
     const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
       folder: "avatars",
       width: 150,
       crop: "scale",
     });
 
+    // Update the user's avatar data
     newUserData.avatar = {
       public_id: myCloud.public_id,
       url: myCloud.secure_url,
     };
   }
-  user = await User.findByIdAndUpdate(req.user.id, newUserData, {
-    new: true,
+
+  // Update the user's profile data
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, newUserData, {
+    new: true, // Return the updated user object
     runValidators: true,
     useFindAndModify: false,
   });
 
+  if (!updatedUser) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
   res.status(200).json({
     success: true,
-    user,
+    user: updatedUser,
   });
 });
 

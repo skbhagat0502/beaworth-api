@@ -94,7 +94,12 @@ const Home = () => {
             <h2 className="productsHeading">Top Restaurants Nearby</h2>
             <div className="shops">
               {users &&
-                users.map((user) => <ShopCard key={user._id} user={user} />)}
+                users.map(
+                  (user) =>
+                    user.role == "seller" && (
+                      <ShopCard key={user._id} user={user} />
+                    )
+                )}
             </div>
           </div>
         </>

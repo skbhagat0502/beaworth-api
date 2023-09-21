@@ -17,6 +17,7 @@ import {
   profileReducer,
   userDetailsReducer,
   userReducer,
+  allShopsReducer,
 } from "./reducers/userReducer";
 
 import { cartReducer } from "./reducers/cartReducer";

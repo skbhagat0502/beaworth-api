@@ -76,7 +76,7 @@ const LoginSignUp = ({ history, location }) => {
       reader.onload = () => {
         if (reader.readyState === 2) {
           setAvatarPreview(reader.result);
-          setAvatar(e.target.files[0]);
+          setAvatar(reader.result);
         }
       };
 
