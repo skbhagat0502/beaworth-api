@@ -74,6 +74,12 @@ const UsersList = ({ history }) => {
       flex: 1,
     },
     {
+      field: "phone",
+      headerName: "Phone",
+      minWidth: 100,
+      flex: 1,
+    },
+    {
       field: "name",
       headerName: "Name",
       minWidth: 150,
@@ -126,11 +132,12 @@ const UsersList = ({ history }) => {
       rows.push({
         id: item._id,
         role: item.role,
-        email: item.email,
+        phone: item?.phone,
+        email: item?.email,
         name: item.name,
       });
     });
-
+  rows.reverse();
   return (
     <Fragment>
       <MetaData title={`ALL USERS - Admin`} />

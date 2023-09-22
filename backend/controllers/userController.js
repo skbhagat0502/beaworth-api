@@ -1,4 +1,4 @@
-const ErrorHandler = require("../utils/errorhander");
+const ErrorHander = require("../utils/errorhander");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/userModel");
 const sendToken = require("../utils/jwtToken");
@@ -8,18 +8,6 @@ const cloudinary = require("cloudinary");
 
 // Register User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  let avatarData;
-  if (req.body.avatar) {
-    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-      folder: "avatars",
-      width: 150,
-      crop: "scale",
-    });
-    avatarData = {
-      public_id: myCloud.public_id,
-      url: myCloud.secure_url,
-    };
-  }
   const { name, email, phone, password } = req.body;
 
   // Check if email or phone is already registered
@@ -27,7 +15,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
   if (existingUser) {
     return next(
-      new ErrorHandler("Email or phone number is already registered", 400)
+      new ErrorHander("Email or phone number is already registered", 400)
     );
   }
 
@@ -36,7 +24,6 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     email,
     phone,
     password,
-    avatar: avatarData,
   });
   console.log(user);
   sendToken(user, 201, res);
@@ -197,7 +184,8 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
   };
   if (req.body.avatar) {
     const user = await User.findById(req.user.id);
-    if (user.avatar) {
+    if (req.user.avatar) {
+      console.log(true);
       await cloudinary.v2.uploader.destroy(user.avatar.public_id);
     }
     // Upload the new avatar to Cloudinary

@@ -31,7 +31,9 @@ const UpdateProfile = ({ history }) => {
     const myForm = new FormData();
 
     myForm.set("name", name);
-    myForm.set("email", email);
+    if (email) {
+      myForm.set("email", email);
+    }
     myForm.set("phone", phone);
     if (avatar) {
       myForm.set("avatar", avatar);
@@ -109,7 +111,6 @@ const UpdateProfile = ({ history }) => {
                   <input
                     type="email"
                     placeholder="Email"
-                    required
                     name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -122,13 +123,14 @@ const UpdateProfile = ({ history }) => {
                     placeholder="Phone Number"
                     name="phone"
                     value={phone}
+                    required
                     onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
                 <div id="updateProfileImage">
                   <img
                     src={avatarPreview}
-                    alt="Avatar Preview"
+                    alt="Profile"
                     style={{
                       borderRadius: "100%",
                       objectFit: "cover",

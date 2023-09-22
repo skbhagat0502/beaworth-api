@@ -38,8 +38,8 @@ const LoginSignUp = ({ history, location }) => {
 
   const { name, email, phone, password } = user;
 
-  const [avatar, setAvatar] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
+  // const [avatar, setAvatar] = useState(null);
+  // const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
 
   const loginSubmit = (e) => {
     e.preventDefault();
@@ -50,7 +50,7 @@ const LoginSignUp = ({ history, location }) => {
     e.preventDefault();
 
     // Validation checks
-    if (!name || !email || !phone || !password) {
+    if (!name || !phone || !password) {
       alert.error("All fields are mandatory.");
       return;
     }
@@ -61,29 +61,11 @@ const LoginSignUp = ({ history, location }) => {
     myForm.set("phone", phone);
     myForm.set("email", email);
     myForm.set("password", password);
-
-    if (avatar) {
-      myForm.set("avatar", avatar);
-    }
-
     dispatch(register(myForm));
   };
 
   const registerDataChange = (e) => {
-    if (e.target.name === "avatar") {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setAvatarPreview(reader.result);
-          setAvatar(reader.result);
-        }
-      };
-
-      reader.readAsDataURL(e.target.files[0]);
-    } else {
-      setUser({ ...user, [e.target.name]: e.target.value });
-    }
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
@@ -171,7 +153,7 @@ const LoginSignUp = ({ history, location }) => {
                   />
                   <input
                     type="text"
-                    placeholder="Name"
+                    placeholder="Name*"
                     required
                     name="name"
                     value={name}
@@ -184,7 +166,7 @@ const LoginSignUp = ({ history, location }) => {
                   />
                   <input
                     type="text"
-                    placeholder="Phone"
+                    placeholder="Phone*"
                     required
                     name="phone"
                     value={phone}
@@ -195,8 +177,7 @@ const LoginSignUp = ({ history, location }) => {
                   <MailOutlineIcon />
                   <input
                     type="email"
-                    placeholder="Email"
-                    required
+                    placeholder="Email (optional)"
                     name="email"
                     value={email}
                     onChange={registerDataChange}
@@ -206,7 +187,7 @@ const LoginSignUp = ({ history, location }) => {
                   <LockOpenIcon />
                   <input
                     type={Visibility ? "text" : "password"}
-                    placeholder="Password"
+                    placeholder="Password*"
                     required
                     name="password"
                     value={password}
@@ -215,16 +196,6 @@ const LoginSignUp = ({ history, location }) => {
                   <i className="visible" onClick={handleVisibility}>
                     <VisibilityIcon />
                   </i>
-                </div>
-
-                <div id="registerImage">
-                  <img src={avatarPreview} alt="Avatar Preview" />
-                  <input
-                    type="file"
-                    name="avatar"
-                    accept="image/*"
-                    onChange={registerDataChange}
-                  />
                 </div>
                 <input type="submit" value="Register" className="signUpBtn" />
               </form>

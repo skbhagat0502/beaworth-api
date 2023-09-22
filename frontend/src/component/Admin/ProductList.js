@@ -127,7 +127,7 @@ const ProductList = ({ history }) => {
         name: item.name,
       });
     });
-
+  rows?.reverse();
   return (
     <Fragment>
       <MetaData title={`ALL PRODUCTS - Admin`} />
