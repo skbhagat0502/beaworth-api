@@ -69,7 +69,7 @@ const Products = ({ match }) => {
           <MetaData title="PRODUCTS -- Beaworth" />
           <h2 className="productsHeading">Products</h2>
 
-          {products.length ? (
+          {products?.length ? (
             <div className="products">
               {products &&
                 products.map((product) => (
