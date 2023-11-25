@@ -4,6 +4,8 @@ const ErrorHander = require("../utils/errorhander");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Shopkeeper = require("../models/shopModel");
 const User = require("../models/userModel");
+const sendEmail = require("../utils/sendEmail");
+const newOderTemplateForOwner = require("../emailTemplates/newOrderTemplateForOwner");
 
 // Create new Order
 exports.newOrder = catchAsyncErrors(async (req, res, next) => {
@@ -34,22 +36,31 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     })
   );
 
-  const order = await Order.create({
-    shippingInfo,
-    orderItems: orderItemsWithShopkeepers,
-    paymentInfo,
-    itemsPrice,
-    taxPrice,
-    shippingPrice,
-    totalPrice,
-    paidAt: Date.now(),
-    user: req.user._id,
-  });
-
-  res.status(201).json({
-    success: true,
-    order,
-  });
+  try {
+    const message = newOderTemplateForOwner(req.body);
+    await sendEmail({
+      email: "beaworthbusiness@gmail.com",
+      subject: `New Order!!!`,
+      message,
+    });
+    const order = await Order.create({
+      shippingInfo,
+      orderItems: orderItemsWithShopkeepers,
+      paymentInfo,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice,
+      paidAt: Date.now(),
+      user: req.user._id,
+    });
+    res.status(201).json({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    return next(new ErrorHander(error.message, 500));
+  }
 });
 
 // get Single Order--Admin
