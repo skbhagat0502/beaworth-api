@@ -50,7 +50,7 @@ const LoginSignUp = ({ history, location }) => {
     e.preventDefault();
 
     // Validation checks
-    if (!name || !phone || !password) {
+    if (!name || !email || !phone || !password) {
       alert.error("All fields are mandatory.");
       return;
     }
@@ -178,6 +178,7 @@ const LoginSignUp = ({ history, location }) => {
                   <input
                     type="email"
                     placeholder="Email (optional)"
+                    required
                     name="email"
                     value={email}
                     onChange={registerDataChange}

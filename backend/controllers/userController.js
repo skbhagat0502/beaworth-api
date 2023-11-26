@@ -9,13 +9,19 @@ const cloudinary = require("cloudinary");
 // Register User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   const { name, email, phone, password } = req.body;
+  if (!name || !email || !phone || !password) {
+    return next(new ErrorHander("Please enter all the details", 400));
+  }
+  const existingEmail = await User.findOne({ email });
+  const existingNumber = await User.findOne({ phone });
 
-  // Check if email or phone is already registered
-  const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
+  if (existingEmail) {
+    return next(new ErrorHander("This email is already registered", 400));
+  }
 
-  if (existingUser) {
+  if (existingNumber) {
     return next(
-      new ErrorHander("Email or phone number is already registered", 400)
+      new ErrorHander("This phone number is already registered", 400)
     );
   }
 
