@@ -88,7 +88,7 @@ const ProcessOrder = ({ history, match }) => {
                       <p>Address:</p>
                       <span>
                         {order.shippingInfo &&
-                          `${order.shippingInfo.address}, ${order.shippingInfo.city}, ${order.shippingInfo.state}, ${order.shippingInfo.pinCode}, ${order.shippingInfo.country}`}
+                          `${order.shippingInfo.address}, ${order.shippingInfo.city}, ${order.shippingInfo.state}, ${order.shippingInfo.pinCode}`}
                       </span>
                     </div>
                   </div>
