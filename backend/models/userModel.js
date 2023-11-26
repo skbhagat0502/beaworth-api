@@ -35,7 +35,8 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
-    sparse: true, // Allows unique to be null or undefined, treating them as non-existent
+    sparse: true,
+    required: [true, "Please enter your email address"], // Allows unique to be null or undefined, treating them as non-existent
     validate: {
       validator: function (value) {
         // Validate email only if it is provided
