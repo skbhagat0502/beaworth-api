@@ -18,26 +18,34 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     shippingPrice,
     totalPrice,
   } = req.body;
-
+  const message = newOderTemplateForOwner(req.body);
+  const currentUser = await User.findById(req.user._id);
+  await sendEmail({
+    email: currentUser.email,
+    subject: "Your order is on your way!",
+    message,
+  });
   const orderItemsWithShopkeepers = await Promise.all(
     orderItems.map(async (item) => {
-      // Assuming you have a 'Product' model and 'Shopkeeper' model defined
       const product = await Product.findById(item.product);
       const user = await User.findById(product.user);
-
+      await sendEmail({
+        email: user.email,
+        subject: `You have a new order!`,
+        message,
+      });
       return {
         name: item.name,
         price: item.price,
         quantity: item.quantity,
         image: item.image,
-        product: product._id, // Ensure that the product ID is correctly stored in your database
-        shopkeeper: user._id, // Ensure that the shopkeeper ID is correctly stored in your database
+        product: product._id,
+        shopkeeper: user._id,
       };
     })
   );
 
   try {
-    const message = newOderTemplateForOwner(req.body);
     await sendEmail({
       email: "beaworthbusiness@gmail.com",
       subject: `New Order!!!`,
