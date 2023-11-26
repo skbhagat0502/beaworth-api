@@ -25,38 +25,56 @@ const newOrderTemplateForOwner = (order) => {
       `,
     html: `
     <html>
-    <head>
-    </head>
-    <body style={{ 
-      backgroundColor: 'tomato',
-      padding: '1rem',
-      color: 'white',
-      fontFamily: 'sans-serif',
-      width: '100%',
-      height: '100%',
-    }}>
-      <h1 style={{
-        width: '100%',
-        height: '50px',
-        fontSize: '2rem',
-        textAlign: 'center',
-        borderBottom: '1px solid white',
-      }}>Beaworth</h1>
-      <h2 style={{
-        textAlign: 'center',
-      }}>A new order has been placed!</h2>
-      <p>Here are the details:</p>
-      <ul>
-        ${itemsList}
-      </ul>
-      <p>Items Price: ₹${itemsPrice}</p>
-      <p>Tax: ₹${taxPrice}</p>
-      <p>Shipping: ₹${shippingPrice}</p>
-      <p>Total Price: ₹${totalPrice}</p>
-      <p>Use Beaworth app for more details</p>
-    </body>
-  </html>
-      `,
+  <body style="background-color: #f2f2f2; padding: 1rem; color: #333; font-family: 'Arial', sans-serif; margin: 0;">
+    <header style="background-color: tomato; padding: 1rem; text-align: center; color: white;">
+      <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Beaworth</h1>
+    </header>
+    <h2 style="text-align: center;">Order Details</h2>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
+      <tr>
+        <th style="border: 1px solid #ddd; padding: 0.5rem; text-align: left; background-color: #f2f2f2;">Item</th>
+        <th style="border: 1px solid #ddd; padding: 0.5rem; text-align: left; background-color: #f2f2f2;">Quantity</th>
+        <th style="border: 1px solid #ddd; padding: 0.5rem; text-align: left; background-color: #f2f2f2;">Price</th>
+      </tr>
+      ${orderItems
+        .map(
+          (item) => `
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">${item.name}</td>
+          <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">${item.quantity}</td>
+          <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">${item.price}</td>
+        </tr>`
+        )
+        .join("")}
+    </table>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
+      <tr>
+        <th style="border: 1px solid #ddd; padding: 0.5rem; text-align: left; background-color: #f2f2f2;">Price Details</th>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">Total Items Price:</td>
+        <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">₹${itemsPrice}</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">Tax:</td>
+        <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">₹${taxPrice}</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">Shipping:</td>
+        <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">₹${shippingPrice}</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">Total Price:</td>
+        <td style="border: 1px solid #ddd; padding: 0.5rem; text-align: left;">₹${totalPrice}</td>
+      </tr>
+    </table>
+    <p style="margin: 0.5rem 0;">Use Beaworth app for more details</p>
+    <footer style="text-align: center; margin-top: 2rem; color: #666;">
+      <p>Thank you for shopping with us!</p>
+    </footer>
+  </body>
+</html>
+`,
   };
 };
 
