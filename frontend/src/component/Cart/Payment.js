@@ -2,12 +2,12 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import CheckoutSteps from "../Cart/CheckoutSteps";
 import { useSelector, useDispatch } from "react-redux";
 import MetaData from "../layout/MetaData";
-import { useAlert } from "react-alert";
 import axios from "axios";
 import "./payment.css";
 import { createOrder, clearErrors } from "../../actions/orderAction";
 import { emptyCart } from "../../actions/cartAction";
 import useRazorpay from "react-razorpay";
+import { toast } from "react-toastify";
 
 const Payment = ({ history }) => {
   const [Razorpay, isLoaded] = useRazorpay();
@@ -15,7 +15,6 @@ const Payment = ({ history }) => {
 
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
   const dispatch = useDispatch();
-  const alert = useAlert();
   const { user } = useSelector((state) => state.user);
   const { error } = useSelector((state) => state.newOrder);
   const payBtn = useRef(null);
@@ -26,7 +25,7 @@ const Payment = ({ history }) => {
 
   const handlePayment = () => {
     if (!razorpayKey) {
-      alert.error("Razorpay key is not available.");
+      toast.error("Razorpay key is not available.");
       return;
     }
 
@@ -40,7 +39,7 @@ const Payment = ({ history }) => {
       handler: (response) => {
         try {
           if (response.error) {
-            alert.error(response.error.message);
+            toast.error(response.error.message);
           } else {
             const paymentIntentId = response.razorpay_payment_id;
             const order = {
@@ -62,7 +61,7 @@ const Payment = ({ history }) => {
             history.push("/success");
           }
         } catch (error) {
-          alert.error("There's some issue while processing payment");
+          toast.error("There's some issue while processing payment");
           console.error(error);
         }
       },
@@ -104,7 +103,7 @@ const Payment = ({ history }) => {
 
       history.push("/success");
     } catch (error) {
-      alert.error("An error occurred while processing cash on delivery.");
+      toast.error("An error occurred while processing cash on delivery.");
       console.error(error);
     }
   };
@@ -115,10 +114,10 @@ const Payment = ({ history }) => {
       if (response.data && response.data.key) {
         setRazorpayKey(response.data.key);
       } else {
-        alert.error("Error retrieving Razorpay key.");
+        toast.error("Error retrieving Razorpay key.");
       }
     } catch (error) {
-      alert.error("An error occurred while fetching Razorpay key.");
+      toast.error("An error occurred while fetching Razorpay key.");
       console.error(error);
     }
   };
@@ -129,10 +128,10 @@ const Payment = ({ history }) => {
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      toast.error(error);
       dispatch(clearErrors());
     }
-  }, [error, alert, dispatch]);
+  }, [error, dispatch]);
 
   return (
     <Fragment>

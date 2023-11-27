@@ -5,10 +5,8 @@ import { clearErrors, getProduct } from "../../actions/productAction";
 import Loader from "../layout/Loader/Loader";
 import ProductCard from "../Home/ProductCard";
 import Pagination from "react-js-pagination";
-import Slider from "@material-ui/core/Slider";
-import { useAlert } from "react-alert";
-import Typography from "@material-ui/core/Typography";
 import MetaData from "../layout/MetaData";
+import { toast } from "react-toastify";
 
 const categories = [
   "Groceries",
@@ -22,8 +20,6 @@ const categories = [
 
 const Products = ({ match }) => {
   const dispatch = useDispatch();
-
-  const alert = useAlert();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([0, 25000]);
@@ -53,12 +49,12 @@ const Products = ({ match }) => {
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      toast.error(error);
       dispatch(clearErrors());
     }
 
     dispatch(getProduct(keyword, currentPage, price, category, ratings));
-  }, [dispatch, keyword, currentPage, price, category, ratings, alert, error]);
+  }, [dispatch, keyword, currentPage, price, category, ratings, error]);
 
   return (
     <Fragment>

@@ -8,11 +8,10 @@ import FaceIcon from "@material-ui/icons/Face";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, login, register } from "../../actions/userAction";
-import { useAlert } from "react-alert";
+import { toast } from "react-toastify";
 
 const LoginSignUp = ({ history, location }) => {
   const dispatch = useDispatch();
-  const alert = useAlert();
 
   const { error, loading, isAuthenticated } = useSelector(
     (state) => state.user
@@ -51,7 +50,7 @@ const LoginSignUp = ({ history, location }) => {
 
     // Validation checks
     if (!name || !email || !phone || !password) {
-      alert.error("All fields are mandatory.");
+      toast.error("All fields are mandatory.");
       return;
     }
 
@@ -72,14 +71,14 @@ const LoginSignUp = ({ history, location }) => {
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      toast.error(error);
       dispatch(clearErrors());
     }
 
     if (isAuthenticated) {
       history.push(redirect);
     }
-  }, [dispatch, error, alert, history, isAuthenticated, redirect]);
+  }, [dispatch, error, history, isAuthenticated, redirect]);
 
   const switchTabs = (e, tab) => {
     if (tab === "login") {
