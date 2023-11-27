@@ -9,7 +9,6 @@ import {
 } from "../../actions/productAction";
 import ReviewCard from "./ReviewCard.js";
 import Loader from "../layout/Loader/Loader";
-import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
 import { addItemsToCart } from "../../actions/cartAction";
 import {
@@ -22,10 +21,10 @@ import {
 import { Rating } from "@material-ui/lab";
 import { NEW_REVIEW_RESET } from "../../constants/productConstants";
 import { myOrders } from "../../actions/orderAction";
+import { toast } from "react-toastify";
 
 const ProductDetails = ({ match }) => {
   const dispatch = useDispatch();
-  const alert = useAlert();
   const { orders } = useSelector((state) => state.myOrders);
 
   const { product, loading, error } = useSelector(
@@ -63,7 +62,7 @@ const ProductDetails = ({ match }) => {
 
   const addToCartHandler = () => {
     dispatch(addItemsToCart(match.params.id, quantity));
-    alert.success("Item Added To Cart");
+    toast.success("Item Added To Cart");
   };
 
   const submitReviewToggle = () => {
@@ -88,24 +87,24 @@ const ProductDetails = ({ match }) => {
   );
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      toast.error(error);
       dispatch(clearErrors());
     }
 
     if (reviewError) {
-      alert.error(reviewError);
+      toast.error(reviewError);
       dispatch(clearErrors());
     }
 
     if (success) {
-      alert.success("Review Submitted Successfully");
+      toast.success("Review Submitted Successfully");
       dispatch({ type: NEW_REVIEW_RESET });
     }
 
     dispatch(getProductDetails(match.params.id));
 
     dispatch(myOrders());
-  }, [dispatch, match.params.id, error, alert, reviewError, success]);
+  }, [dispatch, match.params.id, error, reviewError, success]);
 
   return (
     <Fragment>

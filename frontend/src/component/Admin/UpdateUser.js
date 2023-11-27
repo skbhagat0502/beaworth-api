@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useAlert } from "react-alert";
 import { Button } from "@material-ui/core";
 import MetaData from "../layout/MetaData";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
@@ -14,10 +13,10 @@ import {
   clearErrors,
 } from "../../actions/userAction";
 import Loader from "../layout/Loader/Loader";
+import { toast } from "react-toastify";
 
 const UpdateUser = ({ history, match }) => {
   const dispatch = useDispatch();
-  const alert = useAlert();
 
   const { loading, error, user } = useSelector((state) => state.userDetails);
 
@@ -42,21 +41,21 @@ const UpdateUser = ({ history, match }) => {
       setRole(user.role);
     }
     if (error) {
-      alert.error(error);
+      toast.error(error);
       dispatch(clearErrors());
     }
 
     if (updateError) {
-      alert.error(updateError);
+      toast.error(updateError);
       dispatch(clearErrors());
     }
 
     if (isUpdated) {
-      alert.success("User Updated Successfully");
+      toast.success("User Updated Successfully");
       history.push("/admin/users");
       dispatch({ type: UPDATE_USER_RESET });
     }
-  }, [dispatch, alert, error, history, isUpdated, updateError, user, userId]);
+  }, [dispatch, error, history, isUpdated, updateError, user, userId]);
 
   const updateUserSubmitHandler = (e) => {
     e.preventDefault();

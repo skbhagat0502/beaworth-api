@@ -8,16 +8,14 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { useHistory } from "react-router-dom";
-import { useAlert } from "react-alert";
 import { logout } from "../../../actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
-
+import { toast } from "react-toastify";
 const UserOptions = ({ user }) => {
   const { cartItems } = useSelector((state) => state.cart);
 
   const [open, setOpen] = useState(false);
   const history = useHistory();
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const options = [
@@ -58,7 +56,7 @@ const UserOptions = ({ user }) => {
   }
   function logoutUser() {
     dispatch(logout());
-    alert.success("Logout Successfully");
+    toast.success("Logout Successfully");
   }
 
   return (

@@ -6,16 +6,12 @@ import FaceIcon from "@material-ui/icons/Face";
 import PhoneIcon from "@material-ui/icons/Phone"; // Import the PhoneIcon
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, updateProfile, loadUser } from "../../actions/userAction";
-import { useAlert } from "react-alert";
-import {
-  CLEAR_ERRORS,
-  UPDATE_PROFILE_RESET,
-} from "../../constants/userConstants";
+import { UPDATE_PROFILE_RESET } from "../../constants/userConstants";
 import MetaData from "../layout/MetaData";
+import { toast } from "react-toastify";
 
 const UpdateProfile = ({ history }) => {
   const dispatch = useDispatch();
-  const alert = useAlert();
 
   const { user } = useSelector((state) => state.user);
   const { error, isUpdated, loading } = useSelector((state) => state.profile);
@@ -63,12 +59,12 @@ const UpdateProfile = ({ history }) => {
     }
 
     if (error) {
-      alert.error(error);
+      toast.error(error);
       dispatch(clearErrors());
     }
 
     if (isUpdated) {
-      alert.success("Profile Updated Successfully");
+      toast.success("Profile Updated Successfully");
       dispatch(loadUser());
 
       history.push("/account");
@@ -77,7 +73,7 @@ const UpdateProfile = ({ history }) => {
         type: UPDATE_PROFILE_RESET,
       });
     }
-  }, [dispatch, error, alert, history, user, isUpdated]);
+  }, [dispatch, error, history, user, isUpdated]);
 
   return (
     <Fragment>

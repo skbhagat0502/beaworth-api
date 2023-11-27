@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllShops, clearErrors } from "../../actions/userAction";
-import { useAlert } from "react-alert";
 import Loader from "../layout/Loader/Loader";
 import MetaData from "../layout/MetaData";
 import ShopCard from "./ShopCard";
@@ -19,20 +18,19 @@ import paneer from "../../images/paneer.png";
 import dosa from "../../images/dosa.png";
 import { Link } from "react-router-dom";
 import "./Home.css";
+import { toast } from "react-toastify";
+
 const Home = () => {
   const dispatch = useDispatch();
-
-  const alert = useAlert();
-
   const { error, users, loading } = useSelector((state) => state.allUsers);
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      toast.error(error);
       dispatch(clearErrors());
     }
     dispatch(getAllShops());
-  }, [dispatch, error, alert]);
+  }, [dispatch, error]);
 
   return (
     <div className="home">
