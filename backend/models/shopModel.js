@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
 const shopkeeperSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
@@ -27,4 +26,4 @@ const shopkeeperSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("Shopkeeper", shopkeeperSchema);
+export const Shopkeeper = mongoose.model("Shopkeeper", shopkeeperSchema);

@@ -1,24 +1,25 @@
-const ErrorHander = require("../utils/errorhander");
-const catchAsyncErrors = require("./catchAsyncErrors");
-const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
-const shopKeeper = require("../models/shopModel");
+import ErrorHander from "../utils/errorhander.js";
+import { catchAsyncErrors } from "./catchAsyncErrors.js";
+import jwt from "jsonwebtoken";
+import { User } from "../models/userModel.js";
+import { Shopkeeper } from "../models/shopModel.js";
+import { JWT_SECRET } from "../constants.js";
 
-exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
+export const isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
     return next(new ErrorHander("Please Login to access this resource", 401));
   }
 
-  const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+  const decodedData = jwt.verify(token, JWT_SECRET);
 
   req.user = await User.findById(decodedData.id);
 
   next();
 });
 
-exports.authorizeRoles = (...roles) => {
+export const authorizeRoles = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(

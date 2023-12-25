@@ -1,11 +1,9 @@
-const { instance } = require("../server");
-const crypto = require("crypto");
-const { Payment } = require("../models/PaymentModel");
+import { instance } from "../server.js";
+import crypto from "crypto";
+import { Payment } from "../models/PaymentModel.js";
+import { RAZORPAY_API_KEY, RAZORPAY_API_SECRET } from "../constants.js";
 
-const RAZORPAY_API_KEY = process.env.RAZORPAY_API_KEY;
-const RAZORPAY_API_SECRET = process.env.RAZORPAY_API_SECRET;
-
-const checkout = async (req, res) => {
+export const checkout = async (req, res) => {
   try {
     const orderAmount = req.body.amount * 100; // Convert to paisa
     const options = {
@@ -28,7 +26,7 @@ const checkout = async (req, res) => {
   }
 };
 
-const paymentVerification = async (req, res) => {
+export const paymentVerification = async (req, res) => {
   try {
     const { order_id, paymentId, signature } = req.body;
     const body = order_id + "|" + paymentId;
@@ -59,5 +57,3 @@ const paymentVerification = async (req, res) => {
     });
   }
 };
-
-module.exports = { checkout, paymentVerification };

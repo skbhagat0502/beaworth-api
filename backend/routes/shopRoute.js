@@ -1,10 +1,10 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { registerShopkeeper } = require("../controllers/shopController");
-const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
+import { registerShopkeeper } from "../controllers/shopController.js";
+import { isAuthenticatedUser, authorizeRoles } from "../middleware/auth.js";
 
 router
   .route("/me/application")
   .post(isAuthenticatedUser, authorizeRoles("user"), registerShopkeeper);
 
-module.exports = router;
+export default router;

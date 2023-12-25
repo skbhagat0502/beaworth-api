@@ -1,7 +1,7 @@
-const Shopkeeper = require("../models/shopModel");
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+import { Shopkeeper } from "../models/shopModel.js";
+import { catchAsyncErrors } from "../middleware/catchAsyncErrors.js";
 
-exports.registerShopkeeper = catchAsyncErrors(async (req, res, next) => {
+export const registerShopkeeper = catchAsyncErrors(async (req, res, next) => {
   const newShopkeeperData = req.body;
   req.body.user = req.user.id;
 

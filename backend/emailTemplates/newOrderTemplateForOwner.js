@@ -78,4 +78,4 @@ const newOrderTemplateForOwner = (order) => {
   };
 };
 
-module.exports = newOrderTemplateForOwner;
+export default newOrderTemplateForOwner;

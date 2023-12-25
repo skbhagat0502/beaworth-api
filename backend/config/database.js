@@ -1,14 +1,9 @@
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
+import { DB_URI } from "../constants.js";
 const connectDatabase = () => {
-  mongoose
-    .connect(process.env.DB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then((data) => {
-      console.log(`Mongodb connected with server: ${data.connection.host}`);
-    });
+  mongoose.connect(DB_URI).then((data) => {
+    console.log(`Mongodb connected with server: ${data.connection.host}`);
+  });
 };
 
-module.exports = connectDatabase;
+export default connectDatabase;
