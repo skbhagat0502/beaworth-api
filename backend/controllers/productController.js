@@ -76,86 +76,26 @@ export const createProductSeller = catchAsyncErrors(async (req, res, next) => {
 export const getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const resultPerPage = 8;
   const productsCount = await Product.countDocuments();
+  const category = req.query.category;
   let apiFeature;
-  let products = [];
-  let newProducts;
-  const keyword = req.query.keyword?.trim();
-  let keywords = keyword?.split(" ");
-
-  if (keywords?.length > 1) {
-    await Promise.all(
-      keywords.map(async (keyword) => {
-        req.query.keyword = keyword;
-        apiFeature = new ApiFeatures(Product.find(), req.query)
-          .search()
-          .filter();
-        newProducts = await apiFeature.query;
-        newProducts.forEach((newProduct) => {
-          products.push(newProduct);
-        });
-      })
-    );
-
-    // Sort products by keyword matching count
-    products.sort((a, b) => {
-      const keywordCountA = keywords.reduce((count, keyword) => {
-        const regex = new RegExp(keyword, "gi");
-        return count + (a.name.match(regex) || []).length;
-      }, 0);
-
-      const keywordCountB = keywords.reduce((count, keyword) => {
-        const regex = new RegExp(keyword, "gi");
-        return count + (b.name.match(regex) || []).length;
-      }, 0);
-
-      return keywordCountB - keywordCountA;
-    });
-  } else if (mongoose.Types.ObjectId.isValid(req.query.keyword)) {
-    const id = req.query.keyword;
-    req.query.keyword = "";
-    apiFeature = new ApiFeatures(Product.find({ user: id }), req.query)
+  if (category) {
+    apiFeature = new ApiFeatures(
+      Product.find({ category: category }),
+      req.query
+    )
       .search()
       .filter();
-    newProducts = await apiFeature.query;
-    products.push(...newProducts);
   } else {
     apiFeature = new ApiFeatures(Product.find(), req.query).search().filter();
-    newProducts = await apiFeature.query;
-
-    // Shuffle the newProducts array to randomize the order
-    shuffleArray(newProducts);
-
-    let prevUser = null;
-    for (const product of newProducts) {
-      // Check if the current product's user is the same as the previous one
-      if (product.user !== prevUser) {
-        products.push(product);
-        prevUser = product.user;
-      }
-    }
   }
+  const products = await apiFeature.query;
 
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
+  const filteredProductsCount = products.length;
 
-  let filteredProductsCount = products.length;
-
-  // Calculate the start index for pagination
-  const startIndex = (req.query.page - 1) * resultPerPage;
-
-  // Slice the products array to get the products for the current page
-  const paginatedProducts = products.slice(
-    startIndex,
-    startIndex + resultPerPage
-  );
-
+  apiFeature.pagination(resultPerPage);
   res.status(200).json({
     success: true,
-    products: paginatedProducts,
+    products,
     productsCount,
     resultPerPage,
     filteredProductsCount,
@@ -315,7 +255,7 @@ export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
     await cloudinary.v2.uploader.destroy(product.images[i].public_id);
   }
 
-  await product.remove();
+  await Product.deleteOne({ _id: req.params.id });
 
   res.status(200).json({
     success: true,

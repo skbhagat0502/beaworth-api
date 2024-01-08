@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config({ path: "backend/config/config.env" });
 
-export const ORIGIN = process.env.ORIGIN;
 export const NODE_ENV = process.env.NODE_ENV;
 export const RAZORPAY_API_KEY = process.env.RAZORPAY_API_KEY;
 export const RAZORPAY_API_SECRET = process.env.RAZORPAY_API_SECRET;
@@ -18,3 +17,4 @@ export const SMTP_PORT = process.env.SMTP_PORT;
 export const SMTP_SERVICE = process.env.SMTP_SERVICE;
 export const SMTP_MAIL = process.env.SMTP_MAIL;
 export const SMTP_PASSWORD = process.env.SMTP_PASSWORD;
+export const ORIGIN = process.env.ORIGIN;

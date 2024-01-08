@@ -2,12 +2,10 @@ import ErrorHander from "../utils/errorhander.js";
 import { catchAsyncErrors } from "./catchAsyncErrors.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.js";
-import { Shopkeeper } from "../models/shopModel.js";
 import { JWT_SECRET } from "../constants.js";
 
 export const isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
-  const { token } = req.cookies;
-
+  const token = req.header("authorization");
   if (!token) {
     return next(new ErrorHander("Please Login to access this resource", 401));
   }
@@ -29,7 +27,6 @@ export const authorizeRoles = (...roles) => {
         )
       );
     }
-
     next();
   };
 };

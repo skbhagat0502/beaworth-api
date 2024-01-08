@@ -32,7 +32,8 @@ const productSchema = mongoose.Schema({
     },
   ],
   category: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
     required: [true, "Please Enter Product Category"],
   },
   Stock: {
@@ -48,7 +49,7 @@ const productSchema = mongoose.Schema({
   reviews: [
     {
       user: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
       },
@@ -67,7 +68,7 @@ const productSchema = mongoose.Schema({
     },
   ],
   user: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },

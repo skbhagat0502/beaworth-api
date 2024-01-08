@@ -10,6 +10,7 @@ import {
   updateProfile,
   getAllUser,
   getAllShops,
+  getShopDetails,
   getSingleUser,
   updateUserRole,
   deleteUser,
@@ -22,13 +23,15 @@ router.route("/register").post(registerUser);
 
 router.route("/login").post(loginUser);
 
+router.route("/shop/:id").post(getShopDetails);
+
+router.route("/shops").post(getAllShops);
+
 router.route("/password/forgot").post(forgotPassword);
 
 router.route("/password/reset/:token").put(resetPassword);
 
 router.route("/logout").get(logout);
-
-router.route("/").get(getAllShops);
 
 router.route("/me").get(isAuthenticatedUser, getUserDetails);
 

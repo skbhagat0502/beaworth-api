@@ -18,22 +18,22 @@ export const newOrder = catchAsyncErrors(async (req, res, next) => {
     shippingPrice,
     totalPrice,
   } = req.body;
-  const message = newOderTemplateForOwner(req.body);
+  // const message = newOderTemplateForOwner(req.body);
   const currentUser = await User.findById(req.user._id);
-  await sendEmail({
-    email: currentUser.email,
-    subject: "Your order is on your way!",
-    message,
-  });
+  // await sendEmail({
+  //   email: currentUser.email,
+  //   subject: "Your order is on your way!",
+  //   message,
+  // });
   const orderItemsWithShopkeepers = await Promise.all(
     orderItems.map(async (item) => {
       const product = await Product.findById(item.product);
       const user = await User.findById(product.user);
-      await sendEmail({
-        email: user.email,
-        subject: `You have a new order!`,
-        message,
-      });
+      // await sendEmail({
+      //   email: user.email,
+      //   subject: `You have a new order!`,
+      //   message,
+      // });
       return {
         name: item.name,
         price: item.price,
@@ -44,13 +44,12 @@ export const newOrder = catchAsyncErrors(async (req, res, next) => {
       };
     })
   );
-
   try {
-    await sendEmail({
-      email: "beaworthbusiness@gmail.com",
-      subject: `New Order!!!`,
-      message,
-    });
+    // await sendEmail({
+    //   email: "beaworthbusiness@gmail.com",
+    //   subject: `New Order!!!`,
+    //   message,
+    // });
     const order = await Order.create({
       shippingInfo,
       orderItems: orderItemsWithShopkeepers,
@@ -211,7 +210,7 @@ export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHander("Order not found with this Id", 404));
   }
 
-  await order.remove();
+  await Order.deleteOne({ _id: req.params.id });
 
   res.status(200).json({
     success: true,

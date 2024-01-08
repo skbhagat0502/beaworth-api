@@ -5,6 +5,7 @@ import sendToken from "../utils/jwtToken.js";
 import sendEmail from "../utils/sendEmail.js";
 import crypto from "crypto";
 import cloudinary from "cloudinary";
+import { Shopkeeper } from "../models/shopModel.js";
 
 // Register User
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -31,7 +32,6 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
     phone,
     password,
   });
-  console.log(user);
   sendToken(user, 201, res);
 });
 
@@ -67,10 +67,10 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
   res.cookie("token", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
-    SameSite: "None",
-    secure: true,
-    path: "/",
-    domain: ORIGIN,
+    // SameSite: "None",
+    // secure: true,
+    // path: "/",
+    // domain: ORIGIN,
   });
 
   res.status(200).json({
@@ -195,7 +195,6 @@ export const updateProfile = catchAsyncErrors(async (req, res, next) => {
   if (req.body.avatar) {
     const user = await User.findById(req.user.id);
     if (req.user.avatar) {
-      console.log(true);
       await cloudinary.v2.uploader.destroy(user.avatar.public_id);
     }
     // Upload the new avatar to Cloudinary
@@ -244,17 +243,29 @@ export const getAllUser = catchAsyncErrors(async (req, res, next) => {
 
 //Get all shops(Anyone)
 export const getAllShops = catchAsyncErrors(async (req, res, next) => {
-  const users = await User.find({ role: "seller" });
+  const shops = await Shopkeeper.find();
   res.status(200).json({
     success: true,
-    users,
+    shops,
   });
 });
 
+// Get shop Details User
+export const getShopDetails = catchAsyncErrors(async (req, res, next) => {
+  const shop = await Shopkeeper.findOne({ user: req.body.id });
+
+  if (!shop) {
+    return next(new ErrorHander(`No shop found!`));
+  }
+
+  res.status(200).json({
+    success: true,
+    shop,
+  });
+});
 // Get single user (admin)
 export const getSingleUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.params.id);
-
   if (!user) {
     return next(
       new ErrorHander(`User does not exist with Id: ${req.params.id}`)
@@ -300,7 +311,7 @@ export const deleteUser = catchAsyncErrors(async (req, res, next) => {
 
   (await imageId) && cloudinary.v2.uploader.destroy(imageId);
 
-  await user.remove();
+  await User.deleteOne({ _id: req.params.id });
 
   res.status(200).json({
     success: true,
